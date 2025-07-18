@@ -4,7 +4,7 @@ from PIL import Image
 from io import BytesIO
 
 # Use your Stability API Key
-API_KEY = st.secrets["stability_api_key"]  # Store in Streamlit Secrets in production
+API_KEY = "sk-rXn4kzhTxnzBdJK5u9MryCmzmzY1tM0lqE7aPRUz4S3BkATq"  # Store in Streamlit Secrets in production
 
 # API Endpoint
 API_URL = "https://api.stability.ai/v2beta/stable-image/generate/sd3"
