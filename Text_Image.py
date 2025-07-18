@@ -3,50 +3,45 @@ import requests
 from PIL import Image
 from io import BytesIO
 
-# Your Stability AI API Key (use Streamlit secrets in production)
+# Replace with your actual Stability AI API Key
 API_KEY = "sk-rXn4kzhTxnzBdJK5u9MryCmzmzY1tM0lqE7aPRUz4S3BkATq"
 
-# API Endpoint
+# Stability AI API endpoint
 API_URL = "https://api.stability.ai/v2beta/stable-image/generate/sd3"
 
-# Headers
-headers = {
-    "Authorization": f"Bearer {API_KEY}",
-    "Accept": "image/png",
-    "Content-Type": "application/json"
-}
-
 # Streamlit App
-st.set_page_config(page_title="Stability AI Image Generator", page_icon="🎨")
-st.title("🎨 AI Image Generator using Stability AI")
-st.write("Describe anything, and AI will draw it for you!")
+st.title("🎨 AI Picture Maker")
+st.write("Type anything and AI will draw it!")
 
-prompt = st.text_input("📝 What should AI draw for you?")
+# Get user prompt
+prompt = st.text_input("What should AI draw?")
 
-if st.button("✨ Generate Image"):
-    if prompt.strip():
-        with st.spinner("Generating your image..."):
-            payload = {
-                "prompt": prompt,
-                "output_format": "png"
-            }
+# Generate Button
+if st.button("Generate Image"):
+    if prompt:
+        st.info("Please wait... AI is drawing your picture!")
+        # Prepare the API request (multipart/form-data)
+        headers = {
+            "Authorization": f"Bearer {API_KEY}",
+            "Accept": "image/*"
+        }
+        files = {
+            'prompt': (None, prompt),
+            'output_format': (None, 'png')
+        }
 
-            response = requests.post(API_URL, headers=headers, json=payload)
+        # API Request
+        response = requests.post(API_URL, headers=headers, files=files)
 
-            if response.status_code == 200:
-                image = Image.open(BytesIO(response.content))
-                st.image(image, caption="🎉 Here's your AI-generated image!")
+        # Handle API Response
+        if response.status_code == 200:
+            image = Image.open(BytesIO(response.content))
+            st.image(image, caption="Here’s your AI-generated picture!")
 
-                st.download_button(
-                    label="📥 Download Image",
-                    data=response.content,
-                    file_name="ai_image.png",
-                    mime="image/png"
-                )
-            else:
-                st.error(f"❌ Failed to generate image. Status Code: {response.status_code}")
-                st.json(response.json())
+            st.download_button("Download Image", response.content, "AI_Picture.png", "image/png")
+        else:
+            st.error("Oops! Something went wrong. Please check your API key or try again.")
     else:
-        st.warning("Please enter a description!")
+        st.warning("Please type something for AI to draw!")
 
-st.caption("Made with ❤️ using Stability AI SD3 and Streamlit")
+st.caption("Made with ❤️ using Stability AI and Streamlit")
