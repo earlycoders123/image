@@ -5,7 +5,7 @@ from io import BytesIO
 
 # Set your Hugging Face API Key
 API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2"
-HF_API_KEY = "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"  # Use st.secrets on Streamlit Cloud
+HF_API_KEY = "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"  # Use st.secrets on Streamlit Cloud
 
 headers = {"Authorization": f"Bearer {HF_API_KEY}"}
 
