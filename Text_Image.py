@@ -3,24 +3,36 @@ import requests
 from PIL import Image
 from io import BytesIO
 
-# Set your Hugging Face API Key
-API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2"
-HF_API_KEY = "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"  # Use st.secrets on Streamlit Cloud
+# Stability AI API Key (store securely in st.secrets in production)
+API_KEY = "sk-rXn4kzhTxnzBdJK5u9MryCmzmzY1tM0lqE7aPRUz4S3BkATq"
 
-headers = {"Authorization": f"Bearer {HF_API_KEY}"}
+# API Endpoint
+API_URL = "https://api.stability.ai/v2beta/stable-image/generate/sd3"
 
-# Streamlit App Setup
-st.set_page_config(page_title="Hugging Face AI Image Generator", page_icon="🎨")
-st.title("🎨 AI Text-to-Image Generator for Kids")
-st.write("Describe anything and AI will draw it for you!")
+# Headers
+headers = {
+    "Authorization": f"Bearer {API_KEY}",
+    "Accept": "image/png"
+}
 
-# Input
-prompt = st.text_input("📝 Describe your image:")
+# Streamlit App UI
+st.set_page_config(page_title="Stability AI Image Generator", page_icon="🎨")
+st.title("🎨 Stability AI Image Generator for Kids")
+st.write("Type anything, and AI will draw it for you!")
 
-if st.button("🎨 Generate Image"):
-    if prompt.strip():
-        with st.spinner("Creating your image..."):
-            response = requests.post(API_URL, headers=headers, json={"inputs": prompt})
+# User Input
+prompt = st.text_input("📝 What should AI draw?")
+
+# Generate Button
+if st.button("✨ Generate Image"):
+    if prompt.strip() != "":
+        with st.spinner("Drawing your image..."):
+            json_data = {
+                "prompt": prompt,
+                "output_format": "png"
+            }
+            response = requests.post(API_URL, headers=headers, json=json_data)
+
             if response.status_code == 200:
                 image = Image.open(BytesIO(response.content))
                 st.image(image, caption="🎉 Here’s your AI-generated image!")
@@ -34,6 +46,6 @@ if st.button("🎨 Generate Image"):
             else:
                 st.error(f"Failed to generate image. Status Code: {response.status_code}")
     else:
-        st.warning("Please describe what you want to see!")
+        st.warning("Please enter a description!")
 
-st.caption("Made with ❤️ using Hugging Face Stable Diffusion and Streamlit")
+st.caption("Made with ❤️ using Stability AI and Streamlit")
