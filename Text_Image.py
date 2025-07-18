@@ -7,7 +7,7 @@ from io import BytesIO
 API_KEY = "sk-rXn4kzhTxnzBdJK5u9MryCmzmzY1tM0lqE7aPRUz4S3BkATq"
 
 # Stability AI API endpoint
-API_URL = "https://api.stability.ai/v1/generation/stable-diffusion-512-v2-1/text-to-image"
+API_URL = "https://api.stability.ai/v1/generation/stable-diffusion-512-v1-5/text-to-image"
 
 # Streamlit App
 st.title("🎨 AI Picture Maker")
